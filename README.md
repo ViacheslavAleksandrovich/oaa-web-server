@@ -1,24 +1,148 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# OAA Banking System - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Фінансова система для демонстрації оркестрації процесів аутентифікації та авторизації у WEB додатках.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
+## Архітектура
+
+### Ролі користувачів:
+
+- **Bank Admin** - повний доступ до системи
+- **Account Manager** - управління рахунками клієнтів
+- **Client** - банківські операції зі своїми рахунками
+- **Auditor** - перегляд аудит-логів та звітів
+
+### Основний функціонал:
+
+- ✅ JWT аутентифікація з refresh токенами
+- ✅ Role-Based Access Control (RBAC)
+- ✅ Багаторівнева авторизація
+- ✅ Аудит всіх дій користувачів
+- ✅ Rate limiting для безпеки
+- ✅ KYC (Know Your Customer) верифікація
+- ✅ Fraud detection система
+- ✅ 2FA готовність
+- ✅ Транзакційні логи
+
+## Технологічний стек
+
+- **NestJS** - Backend framework
+- **TypeORM** - ORM для PostgreSQL
+- **PostgreSQL** - База даних
+- **JWT** - Токени доступу
+- **bcryptjs** - Хешування паролів
+- **Swagger** - API документація
+- **class-validator** - Валідація даних
+
+## Налаштування
+
+### 1. База даних PostgreSQL
+
+```bash
+# Встановити PostgreSQL
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+# Створити базу даних
+sudo -u postgres createdb oaa_web_app
+
+# Створити користувача (опціонально)
+sudo -u postgres createuser --interactive
+```
+
+### 2. Встановлення залежностей
+
+```bash
+cd oaa-web-server
+npm install
+```
+
+### 3. Конфігурація
+
+Створіть файл `.env` з наступними змінними:
+
+```env
+# Database Configuration
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=oaa_web_app
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_SECRET=your-super-secret-refresh-jwt-key
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Application Configuration
+PORT=3001
+NODE_ENV=development
+
+# Rate Limiting
+THROTTLE_TTL=60
+THROTTLE_LIMIT=10
+```
+
+### 4. Запуск
+
+```bash
+# Development режим
+npm run start:dev
+
+# Production режим
+npm run build
+npm run start:prod
+
+# Заповнення початкових даних
+npm run seed
+```
+
+## API Endpoints
+
+### Аутентифікація
+
+- `POST /auth/register` - Реєстрація користувача
+- `POST /auth/login` - Логін користувача
+- `POST /auth/refresh` - Оновлення токенів
+- `POST /auth/logout` - Вихід з системи
+
+### Банківські операції
+
+- `POST /banking/accounts` - Створення рахунку
+- `GET /banking/accounts` - Список рахунків користувача
+- `GET /banking/accounts/:id` - Детальна інформація рахунку
+- `POST /banking/transfer` - Переказ коштів
+- `GET /banking/accounts/:id/transactions` - Історія транзакцій
+
+### Адміністрування
+
+- `POST /banking/accounts/:id/approve` - Затвердження рахунку (Admin/Manager)
+
+## Тестові користувачі
+
+Після виконання `npm run seed` будуть створені:
+
+1. **Bank Admin**
+   - Email: admin@oaabank.com
+   - Password: Admin123!
+
+2. **Account Manager**
+   - Email: manager@oaabank.com
+   - Password: Manager123!
+
+3. **System Auditor**
+   - Email: auditor@oaabank.com
+   - Password: Auditor123!
+
+4. **Test Client**
+   - Email: client@example.com
+   - Password: Client123!
+
+## API Документація
+
+Після запуску сервера, документація Swagger доступна за адресою:
+`http://localhost:3001/api/docs`
+
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
