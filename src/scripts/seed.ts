@@ -16,7 +16,7 @@ async function seed() {
   });
 
   if (!adminExists) {
-    const hashedPassword = await bcrypt.hash('Admin123!', 12);
+    const hashedPassword = await bcrypt.hash('password123', 12);
     const admin = userRepository.create({
       email: 'admin@oaabank.com',
       password: hashedPassword,
@@ -27,7 +27,7 @@ async function seed() {
       emailVerified: true,
     });
     await userRepository.save(admin);
-    console.log('✅ Bank Admin created: admin@oaabank.com / Admin123!');
+    console.log('✅ Bank Admin created: admin@oaabank.com / password123');
   }
 
   // Create Account Manager
@@ -36,7 +36,7 @@ async function seed() {
   });
 
   if (!managerExists) {
-    const hashedPassword = await bcrypt.hash('Manager123!', 12);
+    const hashedPassword = await bcrypt.hash('password123', 12);
     const manager = userRepository.create({
       email: 'manager@oaabank.com',
       password: hashedPassword,
@@ -48,7 +48,7 @@ async function seed() {
     });
     await userRepository.save(manager);
     console.log(
-      '✅ Account Manager created: manager@oaabank.com / Manager123!',
+      '✅ Account Manager created: manager@oaabank.com / password123',
     );
   }
 
@@ -58,7 +58,7 @@ async function seed() {
   });
 
   if (!auditorExists) {
-    const hashedPassword = await bcrypt.hash('Auditor123!', 12);
+    const hashedPassword = await bcrypt.hash('password123', 12);
     const auditor = userRepository.create({
       email: 'auditor@oaabank.com',
       password: hashedPassword,
@@ -69,7 +69,7 @@ async function seed() {
       emailVerified: true,
     });
     await userRepository.save(auditor);
-    console.log('✅ System Auditor created: auditor@oaabank.com / Auditor123!');
+    console.log('✅ System Auditor created: auditor@oaabank.com / password123');
   }
 
   // Create Test Client
@@ -78,7 +78,7 @@ async function seed() {
   });
 
   if (!clientExists) {
-    const hashedPassword = await bcrypt.hash('Client123!', 12);
+    const hashedPassword = await bcrypt.hash('password123', 12);
     const client = userRepository.create({
       email: 'client@example.com',
       password: hashedPassword,
@@ -90,7 +90,27 @@ async function seed() {
       emailVerified: true,
     });
     await userRepository.save(client);
-    console.log('✅ Test Client created: client@example.com / Client123!');
+    console.log('✅ Test Client created: client@example.com / password123');
+  }
+
+  // Create Demo Admin
+  const demoAdminExists = await userRepository.findOne({
+    where: { email: 'admin@example.com' },
+  });
+
+  if (!demoAdminExists) {
+    const hashedPassword = await bcrypt.hash('password123', 12);
+    const demoAdmin = userRepository.create({
+      email: 'admin@example.com',
+      password: hashedPassword,
+      firstName: 'Demo',
+      lastName: 'Admin',
+      role: UserRole.BANK_ADMIN,
+      isActive: true,
+      emailVerified: true,
+    });
+    await userRepository.save(demoAdmin);
+    console.log('✅ Demo Admin created: admin@example.com / password123');
   }
 
   await app.close();

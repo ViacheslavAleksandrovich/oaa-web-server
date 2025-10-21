@@ -58,6 +58,11 @@ export class BankingController {
     );
   }
 
+  @Get('transactions')
+  async getAllUserTransactions(@CurrentUser() user: User) {
+    return this.bankingService.getAllUserTransactions(user.id, user.role);
+  }
+
   @Post('accounts/:id/approve')
   @Roles(UserRole.BANK_ADMIN, UserRole.ACCOUNT_MANAGER)
   @UseGuards(RolesGuard)

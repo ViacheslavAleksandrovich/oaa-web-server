@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { BankAccount } from '../entities/bank-account.entity';
 import { Transaction } from '../entities/transaction.entity';
 import { AuditLog } from '../entities/audit-log.entity';
@@ -185,6 +185,38 @@ export class BankingService {
       where: [{ fromAccountId: account.id }, { toAccountId: account.id }],
       order: { createdAt: 'DESC' },
       take: 100, // Limit to last 100 transactions
+    });
+  }
+
+  async getAllUserTransactions(
+    userId: string,
+    userRole: UserRole,
+  ): Promise<Transaction[]> {
+    if (userRole === UserRole.BANK_ADMIN || userRole === UserRole.AUDITOR) {
+      // Admin and auditor can see all transactions
+      return this.transactionRepository.find({
+        order: { createdAt: 'DESC' },
+        take: 100,
+        relations: ['fromAccount', 'toAccount'],
+      });
+    }
+
+    // Regular users can only see their own transactions
+    const userAccounts = await this.getUserAccounts(userId);
+    const accountIds = userAccounts.map((account) => account.id);
+
+    if (accountIds.length === 0) {
+      return [];
+    }
+
+    return this.transactionRepository.find({
+      where: [
+        { fromAccountId: In(accountIds) },
+        { toAccountId: In(accountIds) },
+      ],
+      order: { createdAt: 'DESC' },
+      take: 100,
+      relations: ['fromAccount', 'toAccount'],
     });
   }
 
