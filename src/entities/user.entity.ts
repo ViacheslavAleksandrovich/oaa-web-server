@@ -94,6 +94,9 @@ export class User {
   @Column({ nullable: true })
   lastLoginIp: string;
 
+  @Column({ type: 'jsonb', nullable: true })
+  metadata: Record<string, any>;
+
   @OneToMany(() => BankAccount, (account) => account.user)
   accounts: BankAccount[];
 

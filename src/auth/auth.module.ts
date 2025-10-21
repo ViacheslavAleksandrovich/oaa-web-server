@@ -5,6 +5,8 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { OrchestrationService } from './orchestration/orchestration.service';
+import { OrchestrationController } from './orchestration/orchestration.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { User } from '../entities/user.entity';
 import { AuditLog } from '../entities/audit-log.entity';
@@ -24,8 +26,8 @@ import { AuditLog } from '../entities/audit-log.entity';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  controllers: [AuthController, OrchestrationController],
+  providers: [AuthService, OrchestrationService, JwtStrategy],
+  exports: [AuthService, OrchestrationService],
 })
 export class AuthModule {}
