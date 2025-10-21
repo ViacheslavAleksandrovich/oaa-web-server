@@ -17,6 +17,11 @@ export class CreateAccountDto {
   @IsOptional()
   @IsNumber()
   @IsPositive()
+  initialDeposit?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
   creditLimit?: number;
 
   @IsOptional()

@@ -49,7 +49,9 @@ export class BankingService {
       ...createAccountDto,
       accountNumber,
       userId,
-      status: AccountStatus.PENDING_VERIFICATION,
+      status: AccountStatus.ACTIVE, // Автоматично активуємо для демо
+      balance: createAccountDto.initialDeposit || 0,
+      availableBalance: createAccountDto.initialDeposit || 0,
       dailyTransactionLimit:
         createAccountDto.dailyTransactionLimit ||
         this.getDefaultDailyLimit(createAccountDto.accountType),
@@ -59,6 +61,23 @@ export class BankingService {
     });
 
     const savedAccount = await this.accountRepository.save(account);
+
+    // Створюємо початкову транзакцію депозиту, якщо є початковий депозит
+    if (
+      createAccountDto.initialDeposit &&
+      createAccountDto.initialDeposit > 0
+    ) {
+      const depositTransaction = this.transactionRepository.create({
+        type: TransactionType.DEPOSIT,
+        amount: createAccountDto.initialDeposit,
+        description: 'Початковий депозит',
+        toAccountId: savedAccount.id,
+        status: TransactionStatus.COMPLETED,
+        processedAt: new Date(),
+      });
+
+      await this.transactionRepository.save(depositTransaction);
+    }
 
     await this.createAuditLog(
       userId,
