@@ -1,64 +1,64 @@
 # OAA Banking System - Backend
 
-Фінансова система для демонстрації оркестрації процесів аутентифікації та авторизації у WEB додатках.
+Financial system for demonstrating orchestration of authentication and authorization processes in WEB applications.
 
-## Архітектура
+## Architecture
 
-### Ролі користувачів:
+### User Roles:
 
-- **Bank Admin** - повний доступ до системи
-- **Account Manager** - управління рахунками клієнтів
-- **Client** - банківські операції зі своїми рахунками
-- **Auditor** - перегляд аудит-логів та звітів
+- **Bank Admin** - full access to the system
+- **Account Manager** - management of client accounts
+- **Client** - banking operations with own accounts
+- **Auditor** - viewing audit logs and reports
 
-### Основний функціонал:
+### Main Features:
 
-- ✅ JWT аутентифікація з refresh токенами
+- ✅ JWT authentication with refresh tokens
 - ✅ Role-Based Access Control (RBAC)
-- ✅ Багаторівнева авторизація
-- ✅ Аудит всіх дій користувачів
-- ✅ Rate limiting для безпеки
-- ✅ KYC (Know Your Customer) верифікація
-- ✅ Fraud detection система
-- ✅ 2FA готовність
-- ✅ Транзакційні логи
+- ✅ Multi-level authorization
+- ✅ Audit of all user actions
+- ✅ Rate limiting for security
+- ✅ KYC (Know Your Customer) verification
+- ✅ Fraud detection system
+- ✅ 2FA readiness
+- ✅ Transaction logs
 
-## Технологічний стек
+## Technology Stack
 
 - **NestJS** - Backend framework
-- **TypeORM** - ORM для PostgreSQL
-- **PostgreSQL** - База даних
-- **JWT** - Токени доступу
-- **bcryptjs** - Хешування паролів
-- **Swagger** - API документація
-- **class-validator** - Валідація даних
+- **TypeORM** - ORM for PostgreSQL
+- **PostgreSQL** - Database
+- **JWT** - Access tokens
+- **bcryptjs** - Password hashing
+- **Swagger** - API documentation
+- **class-validator** - Data validation
 
-## Налаштування
+## Setup
 
-### 1. База даних PostgreSQL
+### 1. PostgreSQL Database
 
 ```bash
-# Встановити PostgreSQL
+# Install PostgreSQL
 sudo apt update
 sudo apt install postgresql postgresql-contrib
 
-# Створити базу даних
+# Create database
 sudo -u postgres createdb oaa_web_app
 
-# Створити користувача (опціонально)
+# Create user (optional)
 sudo -u postgres createuser --interactive
 ```
 
-### 2. Встановлення залежностей
+### 2. Install dependencies
 
 ```bash
 cd oaa-web-server
 npm install
 ```
 
-### 3. Конфігурація
+### 3. Configuration
 
-Створіть файл `.env` з наступними змінними:
+Create a `.env` file with the following variables:
 
 ```env
 # Database Configuration
@@ -83,44 +83,44 @@ THROTTLE_TTL=60
 THROTTLE_LIMIT=10
 ```
 
-### 4. Запуск
+### 4. Run
 
 ```bash
-# Development режим
+# Development mode
 npm run start:dev
 
-# Production режим
+# Production mode
 npm run build
 npm run start:prod
 
-# Заповнення початкових даних
+# Seed initial data
 npm run seed
 ```
 
 ## API Endpoints
 
-### Аутентифікація
+### Authentication
 
-- `POST /auth/register` - Реєстрація користувача
-- `POST /auth/login` - Логін користувача
-- `POST /auth/refresh` - Оновлення токенів
-- `POST /auth/logout` - Вихід з системи
+- `POST /auth/register` - Register user
+- `POST /auth/login` - User login
+- `POST /auth/refresh` - Refresh tokens
+- `POST /auth/logout` - Logout
 
-### Банківські операції
+### Banking operations
 
-- `POST /banking/accounts` - Створення рахунку
-- `GET /banking/accounts` - Список рахунків користувача
-- `GET /banking/accounts/:id` - Детальна інформація рахунку
-- `POST /banking/transfer` - Переказ коштів
-- `GET /banking/accounts/:id/transactions` - Історія транзакцій
+- `POST /banking/accounts` - Create account
+- `GET /banking/accounts` - List user accounts
+- `GET /banking/accounts/:id` - Account details
+- `POST /banking/transfer` - Transfer funds
+- `GET /banking/accounts/:id/transactions` - Transaction history
 
-### Адміністрування
+### Administration
 
-- `POST /banking/accounts/:id/approve` - Затвердження рахунку (Admin/Manager)
+- `POST /banking/accounts/:id/approve` - Approve account (Admin/Manager)
 
-## Тестові користувачі
+## Test Users
 
-Після виконання `npm run seed` будуть створені:
+After running `npm run seed`, the following users will be created:
 
 1. **Bank Admin**
    - Email: admin@oaabank.com
@@ -138,9 +138,9 @@ npm run seed
    - Email: client@example.com
    - Password: Client123!
 
-## API Документація
+## API Documentation
 
-Після запуску сервера, документація Swagger доступна за адресою:
+After starting the server, Swagger documentation is available at:
 `http://localhost:3001/api/docs`
 
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
